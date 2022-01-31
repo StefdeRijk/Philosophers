@@ -6,7 +6,7 @@
 /*   By: sde-rijk <sde-rijk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/01/26 09:16:06 by sde-rijk      #+#    #+#                 */
-/*   Updated: 2022/01/28 14:03:37 by sde-rijk      ########   odam.nl         */
+/*   Updated: 2022/01/31 17:00:23 by sde-rijk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	initialize_fork_available(t_arguments *arguments)
 {
 	int	i;
 
-	arguments->fork_available = malloc(arguments->number_of_philosophers \
+	arguments->fork_available = malloc((arguments->number_of_philosophers + 1) \
 	* sizeof(int));
 	if (!arguments->fork_available)
 		return (ft_error("Malloc failed\n"));
@@ -27,6 +27,7 @@ int	initialize_fork_available(t_arguments *arguments)
 		arguments->fork_available[i] = 0;
 		i++;
 	}
+	arguments->fork_available[arguments->number_of_philosophers] = 2;
 	return (0);
 }
 
@@ -37,7 +38,11 @@ int	initialize_args(t_arguments *arguments, char **argv)
 	arguments->time_to_eat = ft_atoi(argv[3]);
 	arguments->time_to_sleep = ft_atoi(argv[4]);
 	if (argv[5])
+	{
 		arguments->times_must_eat = ft_atoi(argv[5]);
+		if (arguments->times_must_eat == 0)
+			return (ft_error("Values must be bigger than zero\n"));
+	}
 	else
 		arguments->times_must_eat = 0;
 	arguments->stop_sim = 0;

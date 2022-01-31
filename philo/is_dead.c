@@ -6,13 +6,14 @@
 /*   By: sde-rijk <sde-rijk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/01/26 15:34:27 by sde-rijk      #+#    #+#                 */
-/*   Updated: 2022/01/28 10:31:47 by sde-rijk      ########   odam.nl         */
+/*   Updated: 2022/01/31 13:12:08 by sde-rijk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 #include <sys/time.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int	is_dead(t_philo *s_philo)
 {
@@ -28,10 +29,11 @@ int	is_dead(t_philo *s_philo)
 		if (s_philo->arguments->can_print)
 		{
 			pthread_mutex_lock(&s_philo->arguments->print_lock);
-			s_philo->arguments->stop_sim = 1;
 			s_philo->arguments->can_print = 0;
+			s_philo->arguments->stop_sim = 1;
 			printf("%li %i died\n", current_time, s_philo->philosopher_id);
 			pthread_mutex_unlock(&s_philo->arguments->print_lock);
+			free(s_philo->arguments->fork_available);
 		}
 		return (1);
 	}
