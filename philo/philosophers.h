@@ -6,7 +6,7 @@
 /*   By: sde-rijk <sde-rijk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/01/25 09:27:13 by sde-rijk      #+#    #+#                 */
-/*   Updated: 2022/01/31 17:00:02 by sde-rijk      ########   odam.nl         */
+/*   Updated: 2022/02/03 13:41:38 by sde-rijk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@ typedef struct s_arguments
 
 	pthread_mutex_t	waiter;
 	pthread_mutex_t	print_lock;
+	pthread_mutex_t	sim_lock;
+	pthread_mutex_t	check_forks_lock;
+	pthread_mutex_t	check_eaten_lock;
 	int				can_print;
 
 	int				stop_sim;
@@ -51,11 +54,15 @@ int		initialize_args(t_arguments *arguments, char **argv);
 int		start_simulation(t_arguments *arguments);
 void	*ft_philosopher(void *void_philo);
 void	try_to_eat(t_philo *s_philo);
+void	put_down_forks(t_philo *s_philo);
+int		pick_up_forks(t_philo *s_philo);
 void	sleeping(t_philo *s_philo);
 void	thinking(t_philo *s_philo);
 
 long	get_curr_time(void);
 int		is_dead(t_philo *s_philo);
+int		stop_sim(t_philo *s_philo);
+int		forks_available(t_philo *s_philo);
 void	printing(char *str, t_philo *s_philo);
 
 int		ft_error(char *str);

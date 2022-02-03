@@ -6,7 +6,7 @@
 /*   By: sde-rijk <sde-rijk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/01/26 10:32:31 by sde-rijk      #+#    #+#                 */
-/*   Updated: 2022/01/31 17:27:07 by sde-rijk      ########   odam.nl         */
+/*   Updated: 2022/02/03 13:42:46 by sde-rijk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,17 @@ void	join_threads(pthread_t *philo_thread, t_arguments *arguments)
 	}
 }
 
-void	check_times_eaten(t_philo *s_philo)
+void	*check_times_eaten(void *void_philo)
 {
-	int	*philos;
-	int	done;
-	int	i;
+	t_philo	*s_philo;
+	int		*philos;
+	int		done;
+	int		i;
 
+	s_philo = (t_philo *)void_philo;
 	philos = malloc(s_philo->arguments->number_of_philosophers * sizeof(int));
+	if (!philos)
+		return (void_philo); // needs proper protection
 	i = 0;
 	while (i < s_philo->arguments->number_of_philosophers)
 		philos[i++] = 0;
@@ -55,9 +59,13 @@ void	check_times_eaten(t_philo *s_philo)
 		while (i < s_philo->arguments->number_of_philosophers)
 		{
 			if (philos[i] != 1)
+			{
+				pthread_mutex_lock(&s_philo->arguments->check_eaten_lock);
 				if (s_philo[i].times_eaten == \
 				s_philo->arguments->times_must_eat + 1)
 					philos[i] = 1;
+				pthread_mutex_unlock(&s_philo->arguments->check_eaten_lock);
+			}
 			if (philos[i] == 1)
 				done++;
 			i++;
@@ -65,11 +73,13 @@ void	check_times_eaten(t_philo *s_philo)
 	}
 	free(philos);
 	s_philo->arguments->stop_sim = 1;
+	return (void_philo);
 }
 
 int	get_philosophers(t_arguments *arguments)
 {
 	pthread_t		philo_thread[200];
+	pthread_t		check_eaten_enough;
 	t_philo			*s_philo;
 	int				i;
 
@@ -81,6 +91,9 @@ int	get_philosophers(t_arguments *arguments)
 	}
 	pthread_mutex_init(&arguments->waiter, NULL);
 	pthread_mutex_init(&arguments->print_lock, NULL);
+	pthread_mutex_init(&arguments->sim_lock, NULL);
+	pthread_mutex_init(&arguments->check_forks_lock, NULL);
+	pthread_mutex_init(&arguments->check_eaten_lock, NULL);
 	i = 0;
 	while (i < arguments->number_of_philosophers)
 	{
@@ -90,7 +103,8 @@ int	get_philosophers(t_arguments *arguments)
 		i++;
 	}
 	if (s_philo->arguments->times_must_eat > 0)
-		check_times_eaten(s_philo);
+		pthread_create(&check_eaten_enough, NULL, check_times_eaten, \
+		(void *)s_philo);
 	join_threads(philo_thread, arguments);
 	free(s_philo);
 	return (0);

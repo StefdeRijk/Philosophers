@@ -4,7 +4,7 @@ CC = gcc
 ifndef DEBUG
 	CFLAGS = -Wall -Wextra -Werror
 else
-	CFLAGS = -Wall -Wextra -g -fsanitize=address
+	CFLAGS = -Wall -Wextra -g -fsanitize=thread
 endif
 COMPILE = $(CC) $(CFLAGS)
 
