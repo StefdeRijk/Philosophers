@@ -6,7 +6,7 @@
 /*   By: sde-rijk <sde-rijk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/01/25 09:25:10 by sde-rijk      #+#    #+#                 */
-/*   Updated: 2022/01/31 17:23:26 by sde-rijk      ########   odam.nl         */
+/*   Updated: 2022/02/03 14:20:35 by sde-rijk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	printing(char *str, t_philo *s_philo)
 	{
 		s_philo->arguments->can_print = 0;
 		timestamp = get_curr_time();
-		if (!s_philo->arguments->stop_sim && !is_dead(s_philo))
+		if (!stop_sim(s_philo))
 			printf(str, timestamp, s_philo->philosopher_id);
 		s_philo->arguments->can_print = 1;
 	}

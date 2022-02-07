@@ -9,7 +9,7 @@ endif
 COMPILE = $(CC) $(CFLAGS)
 
 FILES =	main.c utils.c initialize.c simulation.c philosopher.c \
-		states.c timestamp.c is_dead.c
+		forks.c timestamp.c is_dead.c checks.c
 
 OBJS = $(FILES:.c=.o)
 

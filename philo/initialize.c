@@ -6,7 +6,7 @@
 /*   By: sde-rijk <sde-rijk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/01/26 09:16:06 by sde-rijk      #+#    #+#                 */
-/*   Updated: 2022/01/31 17:00:23 by sde-rijk      ########   odam.nl         */
+/*   Updated: 2022/02/04 14:03:22 by sde-rijk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ int	initialize_fork_available(t_arguments *arguments)
 
 	arguments->fork_available = malloc((arguments->number_of_philosophers + 1) \
 	* sizeof(int));
-	if (!arguments->fork_available)
+	arguments->philos_eaten = malloc(arguments->number_of_philosophers \
+	* sizeof(int));
+	if (!arguments->fork_available || !arguments->philos_eaten)
 		return (ft_error("Malloc failed\n"));
 	i = 0;
 	while (i < arguments->number_of_philosophers)
